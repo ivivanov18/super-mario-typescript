@@ -1,17 +1,24 @@
+import SpriteSheet from "./spriteSheet";
+import Vector2 from "./utils/vector2";
+import { loadImage } from "./utils/loaders";
+
 const canvas = <HTMLCanvasElement>document.getElementById("screen");
 const context = canvas.getContext("2d");
-context.fillRect(0, 0, 50, 50);
 
 loadImage("/img/tileset.png").then((img) => {
-  context.drawImage(img, 0, 0);
-});
+  const sprites = new SpriteSheet(img, 16, 16);
+  sprites.define("ground", new Vector2());
+  sprites.define("sky", new Vector2(3, 23));
 
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const image: HTMLImageElement = new Image();
-    image.addEventListener("load", () => {
-      resolve(image);
-    });
-    image.src = src;
-  });
-}
+  for (let x = 0; x < 25; x++) {
+    for (let y = 0; y < 14; y++) {
+      sprites.drawTile("sky", context, new Vector2(x, y));
+    }
+  }
+
+  for (let x = 0; x < 25; x++) {
+    for (let y = 13; y < 14; y++) {
+      sprites.drawTile("ground", context, new Vector2(x, y));
+    }
+  }
+});

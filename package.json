@@ -4,7 +4,7 @@
   "description": "Implementation of Mario Bros game in js",
   "main": "index.js",
   "scripts": {
-    "start": "npx webpack && serve ./public",
+    "start": "npx webpack --mode=development && serve ./public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

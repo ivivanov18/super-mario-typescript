@@ -13,24 +13,33 @@ export default class SpriteSheet {
     this.tiles = new Map();
   }
 
-  define(name: string, position: Vector2) {
+  define(name: string, position: Vector2, width: number, height: number) {
     const buffer = document.createElement("canvas");
-    buffer.width = this.width;
-    buffer.height = this.height;
+    buffer.width = width;
+    buffer.height = height;
     buffer
       .getContext("2d")
       .drawImage(
         this.image,
-        position.x * this.width,
-        position.y * this.height,
-        this.width,
-        this.height,
+        position.x,
+        position.y,
+        width,
+        height,
         0,
         0,
-        this.width,
-        this.height
+        width,
+        height
       );
     this.tiles.set(name, buffer);
+  }
+
+  defineTile(name: string, offset: Vector2) {
+    this.define(
+      name,
+      new Vector2(offset.x * this.width, offset.y * this.height),
+      this.width,
+      this.height
+    );
   }
 
   draw(name: string, context: CanvasRenderingContext2D, position: Vector2) {

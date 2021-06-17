@@ -6,17 +6,23 @@ import { Level } from "./types";
 const canvas = <HTMLCanvasElement>document.getElementById("screen");
 const context = canvas.getContext("2d");
 
-loadImage("/img/tileset.png").then((img) => {
-  const sprites = new SpriteSheet(img, 16, 16);
-  sprites.define("ground", new Vector2());
-  sprites.define("sky", new Vector2(3, 23));
-  loadLevel("1-1").then((level: Level) => {
+Promise.all([loadBackgroundSprites(), loadLevel("1-1")]).then(
+  ([sprites, level]) => {
     level.backgrounds.forEach((background: any) => {
       drawBackground(background, context, sprites);
       drawBackground(background, context, sprites);
     });
+  }
+);
+
+function loadBackgroundSprites(): Promise<SpriteSheet> {
+  return loadImage("/img/tileset.png").then((img) => {
+    const sprites = new SpriteSheet(img, 16, 16);
+    sprites.define("ground", new Vector2());
+    sprites.define("sky", new Vector2(3, 23));
+    return sprites;
   });
-});
+}
 
 function drawBackground(
   background: any,

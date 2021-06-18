@@ -1,7 +1,7 @@
 import SpriteSheet from "./spriteSheet";
 import Vector2 from "./utils/vector2";
-import { loadImage, loadLevel } from "./utils/loaders";
-import { Level } from "./types";
+import { loadLevel } from "./utils/loaders";
+import { loadBackgroundSprites, loadCharactersSprites } from "./sprites";
 
 const canvas = <HTMLCanvasElement>document.getElementById("screen");
 const context = canvas.getContext("2d");
@@ -10,29 +10,26 @@ Promise.all([
   loadBackgroundSprites(),
   loadLevel("1-1"),
   loadCharactersSprites(),
-]).then(([backgrounds, level, characters]: any) => {
-  level.backgrounds.forEach((background: any) => {
-    drawBackground(background, context, backgrounds);
-    drawBackground(background, context, backgrounds);
-  });
-  drawCharacter(context, characters);
-});
+]).then(([backgrounds, level, character]: any) => {
+  const backgroundBuffer: HTMLCanvasElement = document.createElement("canvas");
+  backgroundBuffer.width = 256;
+  backgroundBuffer.height = 240;
 
-function loadCharactersSprites(): Promise<SpriteSheet> {
-  return loadImage("/img/characters.gif").then((img) => {
-    const characters = new SpriteSheet(img, 16, 16);
-    characters.define("mario-idle", new Vector2(276, 44), 16, 16);
-    return characters;
+  level.backgrounds.forEach((background: any) => {
+    drawBackground(background, backgroundBuffer.getContext("2d"), backgrounds);
   });
-}
-function loadBackgroundSprites(): Promise<SpriteSheet> {
-  return loadImage("/img/tileset.png").then((img) => {
-    const sprites = new SpriteSheet(img, 16, 16);
-    sprites.defineTile("ground", new Vector2());
-    sprites.defineTile("sky", new Vector2(3, 23));
-    return sprites;
-  });
-}
+
+  const pos = new Vector2(64, 64);
+  update();
+
+  function update() {
+    context.drawImage(backgroundBuffer, 0, 0);
+    character.draw("mario-idle", context, pos);
+    pos.x += 2;
+    pos.y += 2;
+    requestAnimationFrame(update);
+  }
+});
 
 function drawBackground(
   background: any,
@@ -46,11 +43,4 @@ function drawBackground(
       }
     }
   });
-}
-
-function drawCharacter(
-  context: CanvasRenderingContext2D,
-  character: SpriteSheet
-) {
-  character.draw("mario-idle", context, new Vector2());
 }

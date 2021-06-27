@@ -1,6 +1,7 @@
 import { Background } from "./types";
 import SpriteSheet from "./spriteSheet";
 import Vector2 from "./utils/vector2";
+import Entity from "./entity";
 
 function drawBackground(
   background: Background,
@@ -30,5 +31,11 @@ export function createBackgroundLayer(
 
   return function drawBackgroundLayer(context: CanvasRenderingContext2D) {
     context.drawImage(buffer, 0, 0);
+  };
+}
+
+export function createSpriteLayer(ent: Entity) {
+  return function drawSpriteLayer(context: CanvasRenderingContext2D) {
+    ent.draw(context);
   };
 }

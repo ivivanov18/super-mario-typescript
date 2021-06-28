@@ -12,9 +12,9 @@ export default class Entity {
     this._marioSprite = sprite;
   }
 
-  update() {
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
+  update(deltaTime: number) {
+    this.position.x += this.velocity.x * deltaTime;
+    this.position.y += this.velocity.y * deltaTime;
   }
 
   draw(context: CanvasRenderingContext2D) {

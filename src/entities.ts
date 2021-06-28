@@ -6,7 +6,7 @@ export function createMario(): Promise<Entity> {
   return loadCharactersSprites().then((sprite) => {
     const mario = new Entity(sprite);
     mario.position = new Vector2(64, 180);
-    mario.velocity = new Vector2(2, -10);
+    mario.velocity = new Vector2(200, -600);
     return mario;
   });
 }
